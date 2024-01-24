@@ -223,11 +223,13 @@ namespace Assignment
 			this.rewards = rewards;
 		}
 
-		// TODO: Implement MakeOrder()
-		// public Order MakeOrder()
-		// {
-
-		// }
+		public Order MakeOrder()
+		{
+			Order order = new Order();
+			CurrentOrder = order;
+			orderHistory.Add(order);
+			return order;
+		}
 
 		public bool IsBirthday()
 		{
