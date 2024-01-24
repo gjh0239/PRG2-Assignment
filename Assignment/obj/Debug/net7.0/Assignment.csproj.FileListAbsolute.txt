@@ -1,0 +1,15 @@
+/workspaces/PRG2-Assignment/Assignment/bin/Debug/net7.0/Assignment
+/workspaces/PRG2-Assignment/Assignment/bin/Debug/net7.0/Assignment.deps.json
+/workspaces/PRG2-Assignment/Assignment/bin/Debug/net7.0/Assignment.runtimeconfig.json
+/workspaces/PRG2-Assignment/Assignment/bin/Debug/net7.0/Assignment.dll
+/workspaces/PRG2-Assignment/Assignment/bin/Debug/net7.0/Assignment.pdb
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.csproj.AssemblyReference.cache
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.AssemblyInfoInputs.cache
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.AssemblyInfo.cs
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.csproj.CoreCompileInputs.cache
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.dll
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/refint/Assignment.dll
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.pdb
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/Assignment.genruntimeconfig.cache
+/workspaces/PRG2-Assignment/Assignment/obj/Debug/net7.0/ref/Assignment.dll

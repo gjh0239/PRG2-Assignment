@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿//==========================================================
+// Student Number : S10258107
+// Student Name : Gan Jun Hang
+// Partner Name : Ivan Ng Keyang
+//==========================================================
