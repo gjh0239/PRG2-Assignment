@@ -119,6 +119,74 @@ namespace Assignment
 		}
 	}
 
+	internal class Waffles: IceCream
+    {
+        private string waffleFlavour;
+		public string WaffleFlavour { get{ return waffleFlavour; } set{ waffleFlavour = value; } }
+
+        public Waffles(): base() {}
+
+        public Waffles(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string waffleFlavour):
+                base(option, scoops, flavours, toppings) 
+                {
+                    waffleFlavour = WaffleFlavour;
+                }
+        
+        internal double CalculatePrice()
+        {
+            double price = 0;
+
+            if (waffleFlavour == "red velvet") 
+            {
+                price += 3;
+			}
+			else if (waffleFlavour == "charcoal") 
+			{
+				price += 3;
+			}
+			else if (waffleFlavour == "pandan") 
+			{
+				price += 3;
+			}
+			else 
+			{
+				Console.WriteLine("Invalid waffle flavour");
+			}
+			return price;
+		}
+		public override string ToString()
+		{
+			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {waffleFlavour}, ";
+		}
+	}
+	internal class Cone: IceCream
+    {
+        private bool dipped;
+		public bool Dipped { get{ return dipped; } set{ dipped = value; } }
+
+        public Cone(): base() {}
+
+        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool dipped):
+                base(option, scoops, flavours, toppings) 
+                {
+                    dipped = Dipped;
+                }
+        
+        internal double CalculatePrice()
+        {
+            double price = 0;
+
+            if (dipped == true) 
+            {
+                price += 2;
+			}
+			return price;
+		}
+		public override string ToString()
+		{
+			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {Dipped}, ";
+		}
+	}
 	internal class Customer
 	{
 		private string name;
