@@ -32,7 +32,11 @@ namespace Assignment
 			this.flavours = flavours;
 			this.toppings = toppings;
 		}
-
+		
+		public virtual double CalculatePrice()
+		{
+			return 0.0; 	// place holder
+		}
 	}
 
 	internal class Flavour
@@ -93,7 +97,7 @@ namespace Assignment
 		public Cup(string option, int scoops, List<Flavour> flavours, List<Topping> toppings) :
 				base(option, scoops, flavours, toppings) {}
 
-		public double CalculatePrice()
+		public override double CalculatePrice()
 		{
 			double price;
 
@@ -124,34 +128,29 @@ namespace Assignment
         private string waffleFlavour;
 		public string WaffleFlavour { get{ return waffleFlavour; } set{ waffleFlavour = value; } }
 
-        public Waffles(): base() {}
+        public Waffles(): base() 
+		{
+			waffleFlavour = "";
+		}
 
         public Waffles(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string waffleFlavour):
                 base(option, scoops, flavours, toppings) 
                 {
-                    waffleFlavour = WaffleFlavour;
+                    this.waffleFlavour = WaffleFlavour;
                 }
         
-        internal double CalculatePrice()
+        public override double CalculatePrice()
         {
             double price = 0;
 
-            if (waffleFlavour == "red velvet") 
-            {
-                price += 3;
-			}
-			else if (waffleFlavour == "charcoal") 
+			switch (waffleFlavour)
 			{
-				price += 3;
+				case "Red Velvet": price += 3; break;
+				case "Charcoal": price += 3; break;
+				case "Pandan": price += 3; break;
+				default: Console.WriteLine("Invalid waffle flavour"); break;
 			}
-			else if (waffleFlavour == "pandan") 
-			{
-				price += 3;
-			}
-			else 
-			{
-				Console.WriteLine("Invalid waffle flavour");
-			}
+
 			return price;
 		}
 		public override string ToString()
@@ -172,7 +171,7 @@ namespace Assignment
                     dipped = Dipped;
                 }
         
-        internal double CalculatePrice()
+        public override double CalculatePrice()
         {
             double price = 0;
 
@@ -180,6 +179,7 @@ namespace Assignment
             {
                 price += 2;
 			}
+
 			return price;
 		}
 		public override string ToString()
@@ -289,6 +289,62 @@ namespace Assignment
 		public override string ToString()
 		{
 			return $"{Points}, {PunchCard}, {Tier}";
+		}
+	}
+	internal class Order 
+	{
+		private int id;
+		private DateTime timeReceived;
+		private DateTime timeFulfilled;
+		private List<IceCream> iceCreamList;
+
+		public int Id { get{ return id; } set{ id = value; } }
+		public DateTime TimeReceived { get{ return timeReceived; } set{ timeReceived = value; } }
+		public DateTime TimeFulfilled { get{ return timeFulfilled; } set{ timeFulfilled = value; } }
+		public List<IceCream> IceCreamList { get{ return iceCreamList; } set{ iceCreamList = value; } }
+
+		public Order() 
+		{
+			id = 0;
+			timeReceived = DateTime.Now;
+			timeFulfilled = DateTime.Now;
+			iceCreamList = new List<IceCream>();
+		}
+		public Order(int id, DateTime timeReceived) 
+		{
+			this.id = id;
+			this.timeReceived = timeReceived;
+		}
+
+		public void ModifyIceCream(int x)  // x is a placeholder to select index of icecream item in list
+		{
+		  IceCream item;
+		  item = iceCreamList[x];
+		}
+
+		public void AddIceCream(IceCream iceCream) 
+		{
+			IceCreamList.Add(iceCream);
+		}
+
+		public void RemoveIceCream(IceCream iceCream) 
+		{
+			IceCreamList.Remove(iceCream);
+		}
+
+		public double CalculateTotal() 
+		{
+			double total = 0;
+			foreach (IceCream iceCream in IceCreamList)
+			{
+				total += iceCream.CalculatePrice();
+			}
+			return total;
+		}
+
+		public override string ToString()
+		{
+			return $"{Id}, {TimeReceived}, {TimeFulfilled}, {IceCreamList}";
 		}
 	}
 }
