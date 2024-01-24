@@ -130,7 +130,7 @@ namespace Assignment
 
 		public string Name { get{ return name; } set{ name = value; } }
 		public int Memberid { get{ return memberid; } set{ memberid = value; } }
-		public DateTime Dob { get{ return dateTime; } set{ dateTime = value; } }
+		public DateTime Dob { get{ return dob; } set{ dob = value; } }
 		public Order CurrentOrder { get{ return currentOrder; } set{ currentOrder = value; } }
 		public List<Order> OrderHistory { get{ return orderHistory; } set{ orderHistory = value; } }
 		public PointCard Rewards { get{ return rewards; } set{ rewards = value; } }
@@ -223,6 +223,4 @@ namespace Assignment
 			return $"{Points}, {PunchCard}, {Tier}";
 		}
 	}
-
-
 }
