@@ -158,6 +158,7 @@ namespace Assignment
 			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {waffleFlavour}, ";
 		}
 	}
+
 	internal class Cone: IceCream
     {
         private bool dipped;
@@ -187,6 +188,7 @@ namespace Assignment
 			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {Dipped}, ";
 		}
 	}
+	
 	internal class Customer
 	{
 		private string name;
@@ -293,6 +295,7 @@ namespace Assignment
 			return $"{Points}, {PunchCard}, {Tier}";
 		}
 	}
+
 	internal class Order 
 	{
 		private int id;
