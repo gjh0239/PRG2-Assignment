@@ -240,7 +240,7 @@ namespace Assignment
 
 		public override string ToString()
 		{
-			return $"{Name}, {Memberid}, {Dob}, {CurrentOrder}, {OrderHistory}, {Rewards}";
+			return $"Name: {Name}\nID: {Memberid}\nDate of Birth: {Dob}\nCurrent Order: {CurrentOrder}\n Order History: [{string.Join(", ", OrderHistory)}]\n{Rewards}\n";
 		}
 	}
 
@@ -350,7 +350,14 @@ namespace Assignment
 
 		public override string ToString()
 		{
-			return $"{Id}, {TimeReceived}, {TimeFulfilled}, {IceCreamList}";
+			if (TimeFulfilled == DateTime.MinValue)
+			{
+				return $"{Id,12}{TimeReceived.ToString("dd/MM/yyyy"),16}{"Not Fulfilled",16}[{string.Join(", ", IceCreamList)}]";
+			}
+			else
+			{
+				return $"{Id,12}{TimeReceived.ToString("dd/MM/yyyy"),16}{TimeFulfilled.ToString("dd/MM/yyyy"),16}[{string.Join(", ", IceCreamList)}]";
+			}
 		}
 	}
 
