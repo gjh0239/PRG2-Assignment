@@ -215,13 +215,13 @@ namespace Assignment
 			rewards = new PointCard();
 		}
 
-		public Customer(string name, int memberid, DateTime dob, Order currentOrder, List<Order> orderHistory, PointCard rewards)
+		public Customer(string name, int memberid, DateTime dob, PointCard rewards)
 		{
 			this.name = name;
 			this.memberid = memberid;
 			this.dob = dob;
-			this.currentOrder = currentOrder;
-			this.orderHistory = orderHistory;
+			currentOrder = new Order();
+			orderHistory = new List<Order>();
 			this.rewards = rewards;
 		}
 
