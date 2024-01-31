@@ -30,6 +30,169 @@ List<Customer> ReadCustomers( List<Customer> cList )
     return cList;
 }
 
+Cup CreateCup()
+{
+    Cup x;
+    string option = "cup";
+    int scoops;
+
+    Flavour f;
+    //flavour list
+    string type;
+    bool premium;
+    int quantity;
+    Topping t;
+    //topping list
+    string ToppingType;
+    int ToppingQuantity;
+
+    Console.Write("Enter number of scoops: ");
+    scoops = int.Parse(Console.ReadLine()??"0");
+    //flavour list
+    Console.WriteLine($"===============================\nFlavour Menu\n===============================\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n===============================\n");
+    Console.Write("Enter Type of Ice Cream: ");
+    type = Console.ReadLine()??"";
+    Console.Write("Would you like premium flavours? (Y/N): ");
+    if (Console.ReadLine().ToLower() == "y") 
+    {
+        premium = true;
+    } 
+    else 
+    {
+        premium = false;
+    }
+    Console.Write("Enter quantity: ");
+    quantity = int.Parse(Console.ReadLine()??"0");
+    f = new Flavour(type, premium, quantity);//  Flavour object
+
+    //topping list
+    Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
+    Console.Write("Enter Type of Topping: ");
+    ToppingType = Console.ReadLine()??"";// Topping type
+    Console.Write("Enter quantity: ");
+    ToppingQuantity = int.Parse(Console.ReadLine()??"0");// Topping quantity
+    t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+    
+    //  create cup object
+    x = new Cup(option, scoops, new List<Flavour>(), new List<Topping>());
+    return x;
+}
+
+Cone CreateCone()
+{
+    
+    Cone x;
+    string option = "cone";
+    int scoops;
+    bool dipped;
+
+    Flavour f;
+    //flavour list
+    string type;
+    bool premium;
+    int quantity;
+    Topping t;
+    //topping list
+    string ToppingType;
+    int ToppingQuantity;
+
+    Console.Write("Enter number of scoops: ");
+    scoops = int.Parse(Console.ReadLine()??"0");
+    //flavour list
+    Console.WriteLine($"===============================\nFlavour Menu\n===============================\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n===============================\n");
+    Console.Write("Enter Type of Ice Cream: ");
+    type = Console.ReadLine()??"";
+    Console.Write("Would you like premium flavours? (Y/N): ");
+    if (Console.ReadLine().ToLower() == "y") 
+    {
+        premium = true;
+    } 
+    else 
+    {
+        premium = false;
+    }
+    Console.Write("Enter quantity: ");
+    quantity = int.Parse(Console.ReadLine()??"0");
+    f = new Flavour(type, premium, quantity);//  Flavour object
+
+    //topping list
+    Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
+    Console.Write("Enter Type of Topping: ");
+    ToppingType = Console.ReadLine()??"";// Topping type
+    Console.Write("Enter quantity: ");
+    ToppingQuantity = int.Parse(Console.ReadLine()??"0");// Topping quantity
+    t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+    
+    //dipped?
+    Console.Write("Would you like your cone dipped? (Y/N): ");
+    if (Console.ReadLine().ToLower() == "y") 
+    {
+        dipped = true;
+    } 
+    else 
+    {
+        dipped = false;
+    }
+    //  create cone object
+    x = new Cone(option, scoops, new List<Flavour>(), new List<Topping>(), dipped);
+    return x;
+}
+
+Waffles CreateWaffle() 
+{
+    
+    Waffles x;
+    string option = "Waffle";
+    int scoops;
+    string WaffleFlavour;
+
+    Flavour f;
+    //flavour list
+    string type;
+    bool premium;
+    int quantity;
+    Topping t;
+    //topping list
+    string ToppingType;
+    int ToppingQuantity;
+
+    Console.Write("Enter number of scoops: ");
+    scoops = int.Parse(Console.ReadLine()??"0");
+    //flavour list
+    Console.WriteLine($"===============================\nFlavour Menu\n===============================\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n===============================\n");
+    Console.Write("Enter Type of Ice Cream: ");
+    type = Console.ReadLine()??"";
+    Console.Write("Would you like premium flavours? (Y/N): ");
+    if (Console.ReadLine().ToLower() == "y") 
+    {
+        premium = true;
+    } 
+    else 
+    {
+        premium = false;
+    }
+    Console.Write("Enter quantity: ");
+    quantity = int.Parse(Console.ReadLine()??"0");
+    f = new Flavour(type, premium, quantity);//  Flavour object
+
+    //topping list
+    Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
+    Console.Write("Enter Type of Topping: ");
+    ToppingType = Console.ReadLine()??"";// Topping type
+    Console.Write("Enter quantity: ");
+    ToppingQuantity = int.Parse(Console.ReadLine()??"0");// Topping quantity
+    t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+    
+    //new waffle flavour
+    Console.WriteLine($"===============================\nWaffle Flavour Menu\n===============================\n[1] Red Velvet\n[2] Charcoal\n[3] Pandan\n===============================\n");
+    Console.Write("Enter new waffle flavour: ");
+    WaffleFlavour = Console.ReadLine()??"";
+
+    //  create cup object
+    x = new Waffles(option, scoops, new List<Flavour>(), new List<Topping>(), WaffleFlavour);
+    return x;
+}
+
 void ListCustomers()
 {
     Console.WriteLine($"Name\tMember ID\tDate of Birth\tMembershipStatus\tMembershipPoints\tPunchCard");
@@ -95,6 +258,57 @@ bool CreateOrder()
 
 void DisplayOrderDetails()
 {
+    //  order details
+    int Id;
+    DateTime RecievedAt;
+    
+    //  Menu details
+    int MenuOption;
+    IceCream NewIceCream;
+
+
+   ListCustomers(); //Write values from "Customer.csv"
+   Console.WriteLine("Enter Member ID: ");
+    int memberid = int.Parse(Console.ReadLine()??"0");
+    Customer c = CustomerList.Find(x => x.Memberid == memberid);//  chosen customer
+
+    if (c == null)//  Error message if member ID not found
+    {
+        Console.WriteLine("Member ID not found!");
+        return;
+    }
+    else
+    {
+        //Id = ??
+        RecievedAt = DateTime.Now;// time of order
+        Order Neworder = new Order(Id, RecievedAt);//  creating new order
+        
+        //creating ice cream order:
+        Console.WriteLine($"===============================\nIce Cream Menu\n===============================\n[1] Cup\n[2] Cone\n[3] Waffle\n[0] Exit Program\n===============================\n");
+        Console.Write("Enter your option: ");
+        MenuOption = int.Parse(Console.ReadLine()??"0");
+        switch (MenuOption)
+        {
+            case 1:
+                NewIceCream = CreateCup();
+                break;
+
+            case 2:
+                NewIceCream = CreateCone();
+                break;
+
+            case 3:
+                NewIceCream = CreateWaffle();
+                break;
+
+            case 0:
+                Console.WriteLine("Thank you for using I.C. Treats!");
+                return;
+            default:
+                throw new InvalidOptionException();
+        }
+        
+    }
 
 }
 
@@ -106,6 +320,7 @@ bool ModifyOrderDetails()
 // Extra functions
 
 // Main loop
+ReadCustomers(CustomerList);//  read customers from file
 while(true)
 {
     Console.WriteLine("===============================\nWelcome to I.C. Treats!\n\nHow can we be of service today?\n===============================\n[1] List All Customers\n[2] List All Current Orders\n[3] Register A New Customer\n[4] Create A Customer's Order\n[5] Display Order Details Of A Customer\n[6] Modify Order Details\n[0] Exit Program");
