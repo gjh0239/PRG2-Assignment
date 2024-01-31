@@ -69,11 +69,22 @@ bool RegisterCustomer()
     // add customer to file
     using (StreamWriter sw = new StreamWriter("customers.csv", true))
     {
-        sw.WriteLine($"{NewCustomer.Name},{NewCustomer.Memberid},{NewCustomer.Dob},{NewCustomer.Rewards.Tier},{NewCustomer.Rewards.Points},{NewCustomer.Rewards.PunchCard}");
-        sw.Close();
+        try
+        {
+            sw.WriteLine($"{NewCustomer.Name},{NewCustomer.Memberid},{NewCustomer.Dob},{NewCustomer.Rewards.Tier},{NewCustomer.Rewards.Points},{NewCustomer.Rewards.PunchCard}");
+            Console.WriteLine("Customer added successfully!");//  display success message
+            return true;
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Error writing to file!");// display error message
+            return false;
+        }
+        finally
+        {
+            sw.Close();
+        }
     }
-    Console.WriteLine("Customer added successfully!");// display success message
-    return true;
 }
 
 
