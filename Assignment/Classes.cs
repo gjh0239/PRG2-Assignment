@@ -353,4 +353,10 @@ namespace Assignment
 			return $"{Id}, {TimeReceived}, {TimeFulfilled}, {IceCreamList}";
 		}
 	}
+
+	internal class InvalidOptionException : Exception
+	{
+		public InvalidOptionException() : base() { }
+		public InvalidOptionException(string message) : base(message) { }
+	}
 }

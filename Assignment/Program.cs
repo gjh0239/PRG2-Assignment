@@ -41,7 +41,11 @@ void ListCustomers()
 
 void ListCurrentOrders()
 {
-    return;
+    // Console.WriteLine($"{"Name", 16}Member ID\tDate of Birth\tMembershipStatus\tMembershipPoints\tPunchCard");
+    foreach (Customer c in CustomerList)
+    {
+        Console.WriteLine($"{c.CurrentOrder}");
+    }
 }
 
 bool RegisterCustomer()
@@ -62,4 +66,52 @@ void DisplayOrderDetails()
 bool ModifyOrderDetails()
 {
     return true;
+}
+
+// Extra functions
+
+// Main loop
+while(true)
+{
+    Console.WriteLine("===============================\nWelcome to I.C. Treats!\n\nHow can we be of service today?\n===============================\n[1] List All Customers\n[2] List All Current Orders\n[3] Register A New Customer\n[4] Create A Customer's Order\n[5] Display Order Details Of A Customer\n[6] Modify Order Details\n[0] Exit Program");
+    Console.Write("Enter your option: ");
+    string option = Console.ReadLine()??"-1";
+    Console.WriteLine();
+    try
+    {
+        switch (option)
+        {
+            case "1":
+                ListCustomers();
+                break;
+            case "2":
+                ListCurrentOrders();
+                break;
+            case "3":
+                if (RegisterCustomer()) break;
+                else throw new InvalidOptionException();
+            case "4":
+                if (CreateOrder()) break;
+                else throw new InvalidOptionException();
+            case "5":
+                DisplayOrderDetails();
+                break;
+            case "6":
+                ModifyOrderDetails();
+                break;
+            case "0":
+                Console.WriteLine("Thank you for using I.C. Treats!");
+                return;
+            default:
+                throw new InvalidOptionException();
+        }
+    }
+    catch(InvalidOptionException)
+    {
+        Console.WriteLine("Invalid option! Please try again.");
+    }
+    finally
+    {
+        Thread.Sleep(1500); // wait 1.5s
+    }
 }
