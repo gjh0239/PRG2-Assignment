@@ -319,6 +319,7 @@ namespace Assignment
 		{
 			this.id = id;
 			this.timeReceived = timeReceived;
+			iceCreamList = new List<IceCream>();
 		}
 
 		public void ModifyIceCream(int x)  // x is a placeholder to select index of icecream item in list
