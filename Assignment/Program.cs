@@ -50,8 +50,32 @@ void ListCurrentOrders()
 
 bool RegisterCustomer()
 {
+    Customer NewCustomer = new Customer(); //   create new customer object
+    string name;//  name of customer
+    int memberid;//  member id of customer
+    DateTime dob;//  date of birth of customer
+
+    // get customer details
+    Console.Write("Enter name: ");
+    name = Console.ReadLine()??"";
+    Console.Write("Enter member ID: ");
+    memberid = int.Parse(Console.ReadLine()??"0");
+    Console.Write("Enter date of birth (dd/mm/yyyy): ");
+    dob = DateTime.Parse(Console.ReadLine()??"01/01/1900");
+
+    // create new customer object
+    NewCustomer = new Customer(name, memberid, dob, new PointCard());
+
+    // add customer to file
+    using (StreamWriter sw = new StreamWriter("customers.csv", true))
+    {
+        sw.WriteLine($"{NewCustomer.Name},{NewCustomer.Memberid},{NewCustomer.Dob},{NewCustomer.Rewards.Tier},{NewCustomer.Rewards.Points},{NewCustomer.Rewards.PunchCard}");
+        sw.Close();
+    }
+    Console.WriteLine("Customer added successfully!");// display success message
     return true;
 }
+
 
 bool CreateOrder()
 {
