@@ -364,8 +364,13 @@ bool ModifyOrderDetails()
 // Extra functions
 
 // Main loop
-ReadCustomers(CustomerList);//  read customers from file
-while(true)
+CustomerList = ReadCustomers(CustomerList);
+Console.WriteLine(CustomerList);
+
+Queue<Order> OrdinaryQueue = new Queue<Order>();
+Queue<Order> GoldQueue = new Queue<Order>();
+
+while (true)
 {
     Console.WriteLine("===============================\nWelcome to I.C. Treats!\n\nHow can we be of service today?\n===============================\n[1] List All Customers\n[2] List All Current Orders\n[3] Register A New Customer\n[4] Create A Customer's Order\n[5] Display Order Details Of A Customer\n[6] Modify Order Details\n[0] Exit Program");
     Console.Write("Enter your option: ");
