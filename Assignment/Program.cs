@@ -30,6 +30,37 @@ List<Customer> ReadCustomers( List<Customer> cList )
     return cList;
 }
 
+void CreateIceCreamMenu() 
+{
+    //  Menu details
+    int MenuOption;
+    IceCream NewIceCream;
+        //creating ice cream order:
+        Console.WriteLine($"===============================\nIce Cream Menu\n===============================\n[1] Cup\n[2] Cone\n[3] Waffle\n[0] Exit Program\n===============================\n");
+        Console.Write("Enter your option: ");
+        MenuOption = int.Parse(Console.ReadLine()??"0");
+        switch (MenuOption)
+        {
+            case 1:
+                NewIceCream = CreateCup();
+                break;
+
+            case 2:
+                NewIceCream = CreateCone();
+                break;
+
+            case 3:
+                NewIceCream = CreateWaffle();
+                break;
+
+            case 0:
+                Console.WriteLine("Thank you for using I.C. Treats!");
+                return;
+            default:
+                throw new InvalidOptionException();
+        }
+}
+
 Cup CreateCup()
 {
     Cup x;
@@ -253,62 +284,55 @@ bool RegisterCustomer()
 
 bool CreateOrder()
 {
-    return true;
-}
-
-void DisplayOrderDetails()
-{
     //  order details
     int Id;
     DateTime RecievedAt;
-    
-    //  Menu details
-    int MenuOption;
-    IceCream NewIceCream;
 
-
-   ListCustomers(); //Write values from "Customer.csv"
-   Console.WriteLine("Enter Member ID: ");
+    ListCustomers(); //Write values from "Customer.csv"
+    Console.WriteLine("Enter Member ID: ");
     int memberid = int.Parse(Console.ReadLine()??"0");
     Customer c = CustomerList.Find(x => x.Memberid == memberid);//  chosen customer
 
     if (c == null)//  Error message if member ID not found
     {
         Console.WriteLine("Member ID not found!");
-        return;
+        return false;
     }
     else
     {
-        //Id = ??
+        Id = c.CurrentOrder.Id;//  order id   
         RecievedAt = DateTime.Now;// time of order
         Order Neworder = new Order(Id, RecievedAt);//  creating new order
-        
-        //creating ice cream order:
-        Console.WriteLine($"===============================\nIce Cream Menu\n===============================\n[1] Cup\n[2] Cone\n[3] Waffle\n[0] Exit Program\n===============================\n");
-        Console.Write("Enter your option: ");
-        MenuOption = int.Parse(Console.ReadLine()??"0");
-        switch (MenuOption)
+
+        //calling ice cream menu
+        try
         {
-            case 1:
-                NewIceCream = CreateCup();
-                break;
-
-            case 2:
-                NewIceCream = CreateCone();
-                break;
-
-            case 3:
-                NewIceCream = CreateWaffle();
-                break;
-
-            case 0:
-                Console.WriteLine("Thank you for using I.C. Treats!");
-                return;
-            default:
-                throw new InvalidOptionException();
+            CreateIceCreamMenu();
         }
-        
+        catch(InvalidOptionException)
+        {
+            Console.WriteLine("Invalid option! Please try again.");
+        }
+
+        //loop
+        string option;
+        Console.Write($"Would you like to add another ice cream? (Y/N): ");
+        option = Console.ReadLine()??"".ToLower();
+        while (option == "y")
+        {
+            CreateIceCreamMenu();
+            Console.Write($"Would you like to add another ice cream? (Y/N): ");
+            option = Console.ReadLine()??"".ToLower();
+        }
+        return true;
     }
+
+    
+}
+
+
+void DisplayOrderDetails()
+{
 
 }
 
@@ -341,7 +365,11 @@ while(true)
                 if (RegisterCustomer()) break;
                 else throw new InvalidOptionException();
             case "4":
-                if (CreateOrder()) break;
+                if (CreateOrder()) 
+                {
+                    Console.WriteLine("Thank You for your order!");
+                    break;
+                }               
                 else throw new InvalidOptionException();
             case "5":
                 DisplayOrderDetails();
