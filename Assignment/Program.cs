@@ -372,9 +372,254 @@ void DisplayOrderDetails(List<Customer> CustomerList)
     catch (FormatException) { Console.WriteLine("\nInvalid member ID!"); return; }
 }
 
-bool ModifyOrderDetails()
+Object? ModifyOrderDetails()
 {
-    return true;
+    ListCustomers();
+    Console.Write("Enter member ID: ");
+    try
+    {
+        int memberid = Convert.ToInt32(Console.ReadLine());
+        Customer? c = CustomerList.Find(x => x.Memberid == memberid);
+        if (c == null)
+        {
+            Console.WriteLine("\nCustomer not found!");
+            return null;
+        }
+
+        Console.WriteLine($"{c.CurrentOrder}");
+        if (c.CurrentOrder.IceCreamList.Count == 0)
+        {
+            Console.WriteLine("No ice creams in the order.");
+            return null;
+        }
+
+        Console.WriteLine("Ice Creams in the Order:");
+        for (int i = 0; i < c.CurrentOrder.IceCreamList.Count; i++)
+        {
+            Console.WriteLine($"[{i + 1}] {c.CurrentOrder.IceCreamList[i]}");
+        }
+        Console.WriteLine("[1] Modify an existing ice cream\n[2] Add a new ice cream\n[3] Delete an existing ice cream");
+        Console.Write("Enter your option: ");
+        string option = Console.ReadLine() ?? "-1";
+        switch (option) // Choose to either modify, add or delete an ice cream
+        {
+            case "1": // Modify an existing ice cream
+                Console.Write("Enter the index of the ice cream to modify: ");
+                int index = Convert.ToInt32(Console.ReadLine()) - 1;
+                if (index < 0 || index >= c.CurrentOrder.IceCreamList.Count)
+                {
+                    Console.WriteLine("Invalid ice cream index.");
+                    return null;
+                }
+                var IC = c.CurrentOrder.IceCreamList[index]; // var since there are 3 types of ice cream
+
+                string ICtype = IC.Option; // get the type of ice cream
+
+                // Explicitly cast the ice cream object to its respective type
+                switch (ICtype)
+                {
+                    case "Cone": IC = (Cone)IC; break;
+                    case "Waffle": IC = (Waffles)IC; break;
+                    case "Cup": IC = (Cup)IC; break;
+                }
+
+                // Display the ice cream object
+                Console.WriteLine($"Selected ice cream: {IC}");
+                Console.WriteLine("What do you wish to modify:");
+                // switch(ICtype) // Display the options available to modify based on the type of ice cream
+                // {
+                // 	case "Cone":
+                // 		Console.WriteLine("[1] Ice Cream Type\n[2] Scoops\n[3] Flavours\n[4] Toppings\n[5] Dipped Cone");
+                // 		break;
+                // 	case "Waffle":
+                // 		Console.WriteLine("[1] Ice Cream Type\n[2] Scoops\n[3] Flavours\n[4] Toppings\n[5] Waffle Flavour");
+                // 		break;
+                // 	case "Cup":
+                // 		Console.WriteLine("[1] Ice Cream Type\n[2] Scoops\n[3] Flavours\n[4] Toppings");
+                // 		break;
+                // }
+
+                Console.WriteLine("[1] Ice Cream Type\n[2] Scoops\n[3] Flavours\n[4] Toppings");
+
+                Console.Write("\nEnter your option: ");
+                string modifyOption = Console.ReadLine() ?? "-1";
+                switch (modifyOption) // Choose what to modify
+                {
+                    case "1": // Modify the ice cream type
+
+                        Console.WriteLine("Available ice cream types:");
+                        // Display the available ice cream types based on the current ice cream type
+                        if (ICtype == "Cone") Console.WriteLine("[1] Waffle\n[2] Cup");
+                        else if (ICtype == "Waffle") Console.WriteLine("[1] Cone\n[2] Cup");
+                        else Console.WriteLine("[1] Cone\n[2] Waffle");
+
+                        // Prompt the user for the modifications they wish to make to the ice cream
+                        Console.Write("Enter the index of the ice cream type to change to: ");
+                        int ICtypeIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+                        if (ICtypeIndex < 0 || ICtypeIndex > 3)
+                        {
+                            Console.WriteLine("Invalid ice cream type index.");
+                            return null;
+                        }
+
+                        // Modify the ice cream type
+                        if (ICtype == "Cone")
+                        {
+                            switch (ICtypeIndex)
+                            {
+                                case 1: ICtype = "Waffle"; c.CurrentOrder.IceCreamList[index] = (Waffles)IC; break;
+                                case 2: ICtype = "Cup"; c.CurrentOrder.IceCreamList[index] = (Cup)IC; break;
+                            }
+                        }
+                        else if (ICtype == "Waffle")
+                        {
+                            switch (ICtypeIndex)
+                            {
+                                case 1: ICtype = "Cone"; c.CurrentOrder.IceCreamList[index] = (Cone)IC; break;
+                                case 2: ICtype = "Cup"; c.CurrentOrder.IceCreamList[index] = (Cup)IC; break;
+                            }
+                        }
+                        else if (ICtype == "Cup")
+                        {
+                            switch (ICtypeIndex)
+                            {
+                                case 1: ICtype = "Cone"; c.CurrentOrder.IceCreamList[index] = (Cone)IC; break;
+                                case 2: ICtype = "Waffle"; c.CurrentOrder.IceCreamList[index] = (Waffles)IC; break;
+                            }
+                        }
+                        break;
+
+                    case "2": // Modify the number of scoops
+                        Console.Write("Enter the number of scoops: ");
+                        int scoops = Convert.ToInt32(Console.ReadLine());
+                        if (scoops < 1 || scoops > 3)
+                        {
+                            Console.WriteLine("Invalid number of scoops.");
+                            return null;
+                        }
+                        IC.Scoops = scoops;
+                        break;
+                    case "3": // Modify the flavours
+                        Console.WriteLine("Available flavours to change:");
+                        int count = 1;
+                        foreach (Flavour f in IC.Flavours)
+                        {
+                            Console.WriteLine($"[{count}] {f}");
+                            count++;
+                        }
+
+                        // Ask user what flavour to change
+                        Console.Write("Enter the index of the flavour to add: ");
+                        int flavourIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+                        if (flavourIndex < 0 || flavourIndex >= IC.Flavours.Count)
+                        {
+                            Console.WriteLine("Invalid flavour index.");
+                            return null;
+                        }
+
+                        // Modify that flavour
+                        List<string> FList = new List<string>() { "Vanilla", "Chocolate", "Strawberry", "Durian", "Ube", "Sea Salt" };
+                        Console.WriteLine("Available Flavours to change to:");
+                        Console.WriteLine("Regular Flavours\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n\nPremium Flavours\n[4] Durian\n[5] Ube\n[6] Sea Salt");
+                        Console.Write("Enter the index of the flavour to change to: ");
+
+                        int fChangeIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+
+                        if (fChangeIndex < 0 || fChangeIndex >= 5)
+                        {
+                            Console.WriteLine("Invalid flavour index.");
+                            return null;
+                        }
+
+                        // filters premium
+                        if (fChangeIndex <= 2) IC.Flavours[flavourIndex] = new Flavour(FList[fChangeIndex], false, 1);
+                        else IC.Flavours[flavourIndex] = new Flavour(FList[fChangeIndex], true, 1);
+
+                        break;
+                    case "4": // Modify the toppings
+                        Console.WriteLine("Available toppings:");
+                        int count2 = 1;
+                        foreach (Topping t in IC.Toppings)
+                        {
+                            Console.WriteLine($"[{count2}] {t}");
+                            count2++;
+                        }
+
+                        // Ask user what topping to modify
+                        Console.Write("Enter the index of the topping to modify: ");
+                        int toppingIndex2 = Convert.ToInt32(Console.ReadLine()) - 1;
+                        if (toppingIndex2 < 0 || toppingIndex2 >= IC.Toppings.Count)
+                        {
+                            Console.WriteLine("Invalid topping index.");
+                            return null;
+                        }
+
+                        Console.Write("Enter the index of the topping to add: ");
+                        int toppingIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+                        if (toppingIndex < 0 || toppingIndex >= IC.Toppings.Count)
+                        {
+                            Console.WriteLine("Invalid topping index.");
+                            return null;
+                        }
+                        IC.Toppings.Add(IC.Toppings[toppingIndex]);
+                        break;
+                        /*case "5": // Modify the dipped cone or waffle flavour (only applicable to cone and waffle)
+                            switch (ICtype)
+                            {
+                                case "Cone":
+                                    c.CurrentOrder.IceCreamList[index] = (Cone) IC; // Explicitly cast the ice cream object to its respective type
+                                    Console.WriteLine((Cone)IC.Dipped);
+
+                                    break;
+                                case "Waffle":
+                                    Console.WriteLine("Available waffle flavours:");
+                                    List<string> WList = new List<string>() {"Red Velvet", "Charcoal", "Pandan"};
+                                    int count3 = 1;
+                                    foreach (string s in WList)
+                                    {
+                                        Console.WriteLine($"[{count3}] {s}");
+                                        count3++;
+                                    }
+                                    Console.Write("Enter the index of the waffle flavour to add: ");
+                                    int waffleFlavourIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+                                    if (waffleFlavourIndex < 0 || waffleFlavourIndex >= IC.Count)
+                                    {
+                                        Console.WriteLine("Invalid waffle flavour index.");
+                                        return null;
+                                    }
+                                default:
+                                    Console.WriteLine("Invalid option.");
+                                    return null;
+                            }*/
+                }
+                break;
+            case "2": // Add a new ice cream
+                c.CurrentOrder.AddIceCream((IceCream)CreateIceCreamMenu());
+                break;
+            case "3": // Delete an existing ice cream
+                Console.Write("Enter the index of the ice cream to delete: ");
+                int deleteIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+                if (deleteIndex < 0 || deleteIndex >= c.CurrentOrder.IceCreamList.Count)
+                {
+                    Console.WriteLine("Invalid ice cream index.");
+                    return null;
+                }
+                c.CurrentOrder.IceCreamList.RemoveAt(deleteIndex);
+                Console.WriteLine("Ice cream deleted from the order.");
+                break;
+            default:
+                Console.WriteLine("Invalid option.");
+                return null;
+        }
+        Console.WriteLine("Updated Order:");
+        Console.WriteLine($"{c.CurrentOrder}");
+        return null;
+    }
+    catch (FormatException)
+    {
+        Console.WriteLine("\nInvalid member ID!");
+        return null;
+    }
 }
 
 // Extra functions
