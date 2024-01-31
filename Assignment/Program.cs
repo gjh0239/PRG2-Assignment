@@ -233,13 +233,16 @@ void ListCustomers()
     }
 }
 
-void ListCurrentOrders()
+void ListCurrentOrders(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 {
     // Console.WriteLine($"{"Name", 16}Member ID\tDate of Birth\tMembershipStatus\tMembershipPoints\tPunchCard");
-    foreach (Customer c in CustomerList)
-    {
-        Console.WriteLine($"{c.CurrentOrder}");
-    }
+    Console.WriteLine("Gold Queue");
+    Console.WriteLine($"{"Order ID}, 12"}{"Time Received",16}{"Time Fulfilled",16}{"Ice Cream List",16}");
+    foreach (Order o in OrdinaryQueue) Console.WriteLine(o);
+
+    Console.WriteLine("Ordinary Queue");
+    Console.WriteLine($"{"Order ID}, 12"}{"Time Received",16}{"Time Fulfilled",16}{"Ice Cream List",16}");
+    foreach (Order o in GoldQueue) Console.WriteLine(o);
 }
 
 bool RegisterCustomer()
@@ -331,9 +334,26 @@ bool CreateOrder()
 }
 
 
-void DisplayOrderDetails()
+void DisplayOrderDetails(List<Customer> CustomerList)
 {
-
+    ListCustomers();
+    Console.Write("Enter member ID: ");
+    try
+    {
+        int memberid = Convert.ToInt32(Console.ReadLine());
+        Customer? c = CustomerList.Find(x => x.Memberid == memberid);
+        if (c == null)
+        {
+            Console.WriteLine("\nCustomer not found!");
+            return;
+        }
+        Console.WriteLine($"{c.CurrentOrder}");
+        foreach (Order o in c.OrderHistory)
+        {
+            Console.WriteLine($"{o}");
+        }
+    }
+    catch (FormatException) { Console.WriteLine("\nInvalid member ID!"); return; }
 }
 
 bool ModifyOrderDetails()
@@ -359,7 +379,7 @@ while(true)
                 ListCustomers();
                 break;
             case "2":
-                ListCurrentOrders();
+                ListCurrentOrders(OrdinaryQueue, GoldQueue);
                 break;
             case "3":
                 if (RegisterCustomer()) break;
@@ -372,7 +392,7 @@ while(true)
                 }               
                 else throw new InvalidOptionException();
             case "5":
-                DisplayOrderDetails();
+                DisplayOrderDetails(CustomerList);
                 break;
             case "6":
                 ModifyOrderDetails();
@@ -390,6 +410,9 @@ while(true)
     }
     finally
     {
-        Thread.Sleep(1500); // wait 1.5s
+        // Thread.Sleep(1500); // wait 1.5s
+        Console.Write("Press enter to continue...\n\n");
+        Console.ReadLine();
+        // Console.Clear();
     }
 }
