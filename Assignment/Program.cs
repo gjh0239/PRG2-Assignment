@@ -6,6 +6,9 @@
 
 using Assignment;
 
+Queue<Order> OrdinaryQueue = new Queue<Order>();
+Queue<Order> GoldQueue = new Queue<Order>();
+
 List<Customer> CustomerList = new List<Customer>();
 
 List<Customer> ReadCustomers( List<Customer> cList )
@@ -30,11 +33,11 @@ List<Customer> ReadCustomers( List<Customer> cList )
     return cList;
 }
 
-void CreateIceCreamMenu() 
+object? CreateIceCreamMenu() 
 {
     //  Menu details
     int MenuOption;
-    IceCream NewIceCream;
+    object NewIceCream;
         //creating ice cream order:
         Console.WriteLine($"===============================\nIce Cream Menu\n===============================\n[1] Cup\n[2] Cone\n[3] Waffle\n[0] Exit Program\n===============================\n");
         Console.Write("Enter your option: ");
@@ -43,22 +46,24 @@ void CreateIceCreamMenu()
         {
             case 1:
                 NewIceCream = CreateCup();
-                break;
+                return NewIceCream;
 
             case 2:
                 NewIceCream = CreateCone();
-                break;
+                return NewIceCream;
 
             case 3:
                 NewIceCream = CreateWaffle();
-                break;
+                return NewIceCream;
 
             case 0:
                 Console.WriteLine("Thank you for using I.C. Treats!");
-                return;
+                return null;
             default:
-                throw new InvalidOptionException();
+                return null; 
+                throw new InvalidOptionException(); 
         }
+        
 }
 
 Cup CreateCup()
@@ -290,11 +295,12 @@ bool CreateOrder()
     //  order details
     int Id;
     DateTime RecievedAt;
+    object NewIceCream;
 
     ListCustomers(); //Write values from "Customer.csv"
     Console.WriteLine("Enter Member ID: ");
     int memberid = int.Parse(Console.ReadLine()??"0");
-    Customer c = CustomerList.Find(x => x.Memberid == memberid);//  chosen customer
+    Customer? c = CustomerList.Find(x => x.Memberid == memberid);//  chosen customer
 
     if (c == null)//  Error message if member ID not found
     {
@@ -310,7 +316,8 @@ bool CreateOrder()
         //calling ice cream menu
         try
         {
-            CreateIceCreamMenu();
+            NewIceCream = CreateIceCreamMenu();
+            Neworder.AddIceCream((IceCream)NewIceCream);
         }
         catch(InvalidOptionException)
         {
@@ -327,8 +334,17 @@ bool CreateOrder()
             Console.Write($"Would you like to add another ice cream? (Y/N): ");
             option = Console.ReadLine()??"".ToLower();
         }
-        return true;
+        
+        if (c.Rewards.Tier == "gold")   
+        {
+            GoldQueue.Enqueue(Neworder);
+        }
+        else
+        {
+            OrdinaryQueue.Enqueue(Neworder);
+        }
     }
+    return true;
 
     
 }
@@ -362,13 +378,9 @@ bool ModifyOrderDetails()
 }
 
 // Extra functions
-
 // Main loop
 CustomerList = ReadCustomers(CustomerList);
 Console.WriteLine(CustomerList);
-
-Queue<Order> OrdinaryQueue = new Queue<Order>();
-Queue<Order> GoldQueue = new Queue<Order>();
 
 while (true)
 {
