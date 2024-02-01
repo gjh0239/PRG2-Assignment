@@ -240,7 +240,7 @@ namespace Assignment
 
 		public override string ToString()
 		{
-			return $"Name: {Name}\nID: {Memberid}\nDate of Birth: {Dob}\nCurrent Order: {CurrentOrder}\n Order History: [{string.Join(", ", OrderHistory)}]\n{Rewards}\n";
+			return $"Name: {Name}\nID: {Memberid}\nDate of Birth: {Dob}\nCurrent Order: {CurrentOrder}\n Order History: [{string.Join(", ",OrderHistory)}]\n{Rewards}\n";
 		}
 	}
 
@@ -320,6 +320,7 @@ namespace Assignment
 			this.id = id;
 			this.timeReceived = timeReceived;
 			iceCreamList = new List<IceCream>();
+			timeFulfilled = DateTime.MinValue;
 		}
 
 		public void ModifyIceCream(int x)  // x is a placeholder to select index of icecream item in list
@@ -328,14 +329,14 @@ namespace Assignment
 		  item = iceCreamList[x];
 		}
 
-		public void AddIceCream(IceCream iceCream) 
+		public void AddIceCream(IceCream? iceCream) 
 		{
-			IceCreamList.Add(iceCream);
+			if (iceCream != null) IceCreamList.Add(iceCream);
 		}
 
-		public void RemoveIceCream(IceCream iceCream) 
+		public void RemoveIceCream(IceCream? iceCream) 
 		{
-			IceCreamList.Remove(iceCream);
+			if (iceCream != null) IceCreamList.Remove(iceCream);
 		}
 
 		public double CalculateTotal() 
@@ -348,15 +349,15 @@ namespace Assignment
 			return total;
 		}
 
-		public override string ToString()
+		public override string ToString() // TODO: FIX THIS
 		{
 			if (TimeFulfilled == DateTime.MinValue)
 			{
-				return $"{Id,12}{TimeReceived.ToString("dd/MM/yyyy"),16}{"Not Fulfilled",16}[{string.Join(", ", IceCreamList)}]";
+				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{"Not Fulfilled",-16}[{string.Join(", ", IceCreamList),	-0}]";
 			}
 			else
 			{
-				return $"{Id,12}{TimeReceived.ToString("dd/MM/yyyy"),16}{TimeFulfilled.ToString("dd/MM/yyyy"),16}[{string.Join(", ", IceCreamList)}]";
+				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{TimeFulfilled.ToString("dd/MM/yyyy"),-16}[{string.Join(", ", IceCreamList),-0}]";
 			}
 		}
 	}
