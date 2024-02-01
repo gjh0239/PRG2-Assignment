@@ -109,7 +109,7 @@ Customer? RegisterCustomer()
 bool CreateOrder(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 {
 	//  order details
-	int Id;
+	int Id = new Random().Next(1, 99);
 	DateTime RecievedAt;
 	object? NewIceCream;
 	List<Customer> CustomerList = ReadCustomers();
@@ -127,8 +127,6 @@ bool CreateOrder(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 	else
 	{
 		// TODO: FIX ORDER GENERATION
-		Random random = new Random();
-		Id = random.Next(1,99);//  order id
 		RecievedAt = DateTime.Now;// time of order
 		Order Neworder = new Order(Id, RecievedAt);//  creating new order
 
@@ -519,8 +517,8 @@ Cup CreateCup()
 
 	//topping list
 	Console.Write("Would you like to add toppings? (Y/N): ");
-	string choice = Console.ReadLine()??"".ToLower();
-	if (choice == "y")
+	string ToppingChoice = Console.ReadLine()??"".ToLower();
+	if (ToppingChoice == "y")
 	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
@@ -539,7 +537,7 @@ Cup CreateCup()
 	}
 		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
 	}
-	else if (choice == "n")
+	else if (ToppingChoice == "n")
 	{
 		t = new Topping("None", 0);
 	}
@@ -597,9 +595,9 @@ Cone CreateCone()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
-	Console.Write("Would you like to add toppings? (Y/N): ");
-	string choice = Console.ReadLine()??"".ToLower();
-	if (choice == "y")
+		Console.Write("Would you like to add toppings? (Y/N): ");
+	string ToppingChoice = Console.ReadLine()??"".ToLower();
+	if (ToppingChoice == "y")
 	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
@@ -618,7 +616,7 @@ Cone CreateCone()
 	}
 		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
 	}
-	else if (choice == "n")
+	else if (ToppingChoice == "n")
 	{
 		t = new Topping("None", 0);
 	}
@@ -626,7 +624,7 @@ Cone CreateCone()
 	{
 		throw new InvalidOptionException();
 	}
-
+	
 	//dipped?
 	Console.Write("Would you like your cone dipped? (Y/N): ");
 	choice = Console.ReadLine() ?? "".ToLower();
@@ -691,9 +689,9 @@ Waffles CreateWaffle()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
-	Console.Write("Would you like to add toppings? (Y/N): ");
-	string choice = Console.ReadLine()??"".ToLower();
-	if (choice == "y")
+		Console.Write("Would you like to add toppings? (Y/N): ");
+	string ToppingChoice = Console.ReadLine()??"".ToLower();
+	if (ToppingChoice == "y")
 	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
@@ -712,7 +710,7 @@ Waffles CreateWaffle()
 	}
 		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
 	}
-	else if (choice == "n")
+	else if (ToppingChoice == "n")
 	{
 		t = new Topping("None", 0);
 	}
@@ -720,9 +718,6 @@ Waffles CreateWaffle()
 	{
 		throw new InvalidOptionException();
 	}
-
-
-
 	//new waffle flavour
 	Console.WriteLine($"===============================\nWaffle Flavour Menu\n===============================\n[1] Red Velvet\n[2] Charcoal\n[3] Pandan\n===============================\n");
 	Console.Write("Enter new waffle flavour: ");
