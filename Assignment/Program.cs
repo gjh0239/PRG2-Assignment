@@ -10,9 +10,9 @@ using Assignment;
 
 // Submittables
 
-List<Customer> ReadCustomers()
+Dictionary<string, Customer> ReadCustomers()
 {
-	List<Customer> cList = new List<Customer>();
+	Dictionary<string, Customer> cDict = new Dictionary<string, Customer>();
 	using (StreamReader sr = new StreamReader("customers.csv"))
 	{
 		sr.ReadLine();  //removing header
@@ -28,18 +28,132 @@ List<Customer> ReadCustomers()
 			c.Rewards.Tier = values[3].ToLower();
 
 			//c.Rewards.AddPoints(0);     // work around to assign membership tier since AddPoints() will also assign a tier.
-			cList.Add(c);
+			cDict.Add(values[1], c);
 		}
 		sr.Close();
 	}
-	return cList;
+
+	ReadOrders(cDict);
+
+	return cDict;
 }
 
+Dictionary<string, Flavour> ReadFlavours()
+{
+	Dictionary<string, Flavour> fDict = new Dictionary<string, Flavour>();
+	using (StreamReader sr = new StreamReader("flavours.csv"))
+	{
+		sr.ReadLine();  //removing header
+		string? line;
+
+		while ((line = sr.ReadLine()) != null)
+		{
+			string[] values = line.Split(',');
+			if (values.Length != 2) continue;
+
+			if (values[1] == "0") //  ordinary = 0, premium = 2
+			{
+				Flavour f = new Flavour(values[0], false, Convert.ToInt32(0));
+				fDict.Add(values[0], f);
+			}
+
+			else
+			{
+				Flavour f = new Flavour(values[0], true, Convert.ToInt32(2));
+				fDict.Add(values[0], f);
+			}
+		}
+		sr.Close();
+	}
+	return fDict;
+}
+
+Dictionary<string, Topping> ReadToppings()
+{
+	Dictionary<string, Topping> tDict = new Dictionary<string, Topping>();
+	using (StreamReader sr = new StreamReader("toppings.csv"))
+	{
+		sr.ReadLine();  //removing header
+		string? line;
+
+		while ((line = sr.ReadLine()) != null)
+		{
+			string[] values = line.Split(',');
+			if (values.Length != 2) continue;
+			Topping t = new Topping(values[0]); // ignore price since price of all toppings are $1
+			tDict.Add(values[0], t);
+		}
+		sr.Close();
+	}
+	return tDict;
+}
+
+void ReadOrders(Dictionary<string, Customer> cDict)
+{
+	// List<Customer> cList = ReadCustomers();	// commented out since ReadOrders() is implemented within ReadCustomers()
+	Dictionary<string, Topping> tDict = ReadToppings();
+	Dictionary<string, Flavour> fDict = ReadFlavours();
+
+	using (StreamReader sr = new StreamReader("orders.csv"))
+	{
+		sr.ReadLine();  //removing header
+		string? line;
+
+		while ((line = sr.ReadLine()) != null)
+		{
+			string[] values = line.Split(',');
+			if (values.Length != 15) continue;
+			if (cDict.ContainsKey(values[1])) {Customer c = cDict[values[1]];} else continue;
+
+			// Identify the toppings from tList first
+			List<Topping> toppings = new List<Topping>();
+			for (int i = 0; i < 4; i++)
+			{
+				if (values[12+i] == "") continue;	// not caring about edge case where there's topping 1 and topping 3 
+				Topping t = tDict[values[12+i]];   // but no 2 since it'll never happen :)
+			}
+			
+			// Identify the flavours from fList
+			List<Flavour> flavours = new List<Flavour>();
+			for (int i = 0; i < 3; i++)
+			{
+				if (values[9+i] == "") continue;
+				Flavour f = fDict[values[9+i]];
+			}
+
+			// Create the order objects
+			Order o = new Order(int.Parse(values[0]), DateTime.Parse(values[2]))
+			{ TimeFulfilled = DateTime.Parse(values[3]) };
+
+			// Create the ice cream object
+			void CreateIceCream(IIceCream iceCream)
+			{
+				iceCream.Option = values[4];
+				iceCream.Scoops = int.Parse(values[6]);
+				iceCream.Flavours = flavours;
+				iceCream.Toppings = toppings;
+			}
+
+			// Create the ice cream object based on the type
+			switch (values[4])
+			{
+				case "Cup": Cup cup = new Cup(); CreateIceCream(cup); o.IceCreamList.Add(cup);break;
+				case "Cone": Cone cone = new Cone(); CreateIceCream(cone); cone.Dipped = bool.Parse(values[6].ToLower()); o.IceCreamList.Add(cone); break;
+				case "Waffle": Waffles waffle = new Waffles(); CreateIceCream(waffle); waffle.WaffleFlavour = values[7]; o.IceCreamList.Add(waffle); break;
+			}
+        }
+		sr.Close();
+	}
+}
+
+
+
+// Basic requirements
 void ListCustomers()
 {
-	List<Customer> CustomerList = ReadCustomers();
+	Dictionary<string, Customer> CustomerList = ReadCustomers();
 	Console.WriteLine($"{"Name",-12}{"Member ID",-12}{"Date of Birth",-20}{"MembershipStatus",-20}{"MembershipPoints",-20}{"Punch Card",-16}");
-	foreach (Customer c in CustomerList)
+	foreach (Customer c in CustomerList.Values)
 	{
 		Console.WriteLine($"{c.Name, -12}{c.Memberid,-12}{c.Dob.ToString("dd'/'MM'/'yyyy"), -20}{c.Rewards.Tier, -20}{c.Rewards.Points, -20}{c.Rewards.PunchCard, -16}");
 	}
@@ -47,13 +161,12 @@ void ListCustomers()
 
 void ListCurrentOrders(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 {
-	// Console.WriteLine($"{"Name", 16}Member ID\tDate of Birth\tMembershipStatus\tMembershipPoints\tPunchCard");
-	Console.WriteLine("Gold Queue");
+	Console.WriteLine("Ordinary Queue");
 	Console.WriteLine($"{"Order ID", -12}{"Time Received",-16}{"Time Fulfilled",-16}{"Ice Cream List",-16}");
 	if (OrdinaryQueue.Count > 0) foreach (Order o in OrdinaryQueue) Console.WriteLine(o);
 	else Console.WriteLine("No orders in the queue.");
 
-	Console.WriteLine("\nOrdinary Queue");
+	Console.WriteLine("\nGold Queue");
 	Console.WriteLine($"{"Order ID", -12}{"Time Received",-16}{"Time Fulfilled",-16}{"Ice Cream List",-16}");
 	if (GoldQueue.Count > 0) foreach (Order o in GoldQueue) Console.WriteLine(o);
 	else Console.WriteLine("No orders in the queue.");
@@ -111,30 +224,29 @@ bool CreateOrder(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 	//  order details
 	int Id = new Random().Next(1, 99);
 	DateTime RecievedAt;
-	object? NewIceCream;
-	List<Customer> CustomerList = ReadCustomers();
+	IceCream? NewIceCream;
+	Dictionary<string, Customer> CustomerList = ReadCustomers();
 
 	ListCustomers(); //Write values from "Customer.csv"
 	Console.Write("Enter Member ID: ");
-	int memberid = int.Parse(Console.ReadLine() ?? "0");
-	Customer? c = CustomerList.Find(x => x.Memberid == memberid);//  chosen customer
-
-	if (c == null)//  Error message if member ID not found
+	string memberid = Console.ReadLine() ??"";
+	
+	Customer? c;
+	if (!CustomerList.TryGetValue(memberid, out c))//  Error message if member ID not found
 	{
 		Console.WriteLine("Member ID not found!");
 		return false;
 	}
 	else
 	{
-		// TODO: FIX ORDER GENERATION
-		RecievedAt = DateTime.Now;// time of order
-		Order Neworder = new Order(Id, RecievedAt);//  creating new order
+		RecievedAt = DateTime.Now;	// time of order
+		Order Neworder = new Order(Id, RecievedAt);	//  creating new order
 
 		//calling ice cream menu
 		try
 		{
 			NewIceCream = CreateIceCreamMenu();
-			Neworder.AddIceCream((IceCream?)NewIceCream);
+			Neworder.AddIceCream(NewIceCream);
 		}
 		catch (InvalidOptionException)
 		{
@@ -152,14 +264,12 @@ bool CreateOrder(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 			option = Console.ReadLine() ?? "".ToLower();
 		}
 
-		if (c.Rewards.Tier == "gold")
+		if (c != null)
 		{
-			GoldQueue.Enqueue(Neworder);
+			if (c.Rewards.Tier == "gold") GoldQueue.Enqueue(Neworder);
+			else OrdinaryQueue.Enqueue(Neworder);
 		}
-		else
-		{
-			OrdinaryQueue.Enqueue(Neworder);
-		}
+		else return false;
 	}
 	return true;
 
@@ -168,20 +278,20 @@ bool CreateOrder(Queue<Order> OrdinaryQueue, Queue<Order> GoldQueue)
 
 void DisplayOrderDetails()
 {
-	List<Customer> CustomerList = ReadCustomers();
+	Dictionary<string, Customer> CustomerList = ReadCustomers();
 	ListCustomers();
 	Console.Write("Enter member ID: ");
 	try
 	{
-		int memberid = Convert.ToInt32(Console.ReadLine());
-		Customer? c = CustomerList.Find(x => x.Memberid == memberid);
-		if (c == null)
+		string memberid = Console.ReadLine()??"";
+		Customer? c;
+		if (!CustomerList.TryGetValue(memberid, out c))
 		{
 			Console.WriteLine("\nCustomer not found!");
 			return;
 		}
 		Console.WriteLine($"{c.CurrentOrder}");
-		foreach (Order o in c.OrderHistory) // TODO: FIX PRINT HEADER
+		foreach (Order o in c.OrderHistory)
 		{
 			Console.WriteLine($"{o}");
 		}
@@ -191,14 +301,14 @@ void DisplayOrderDetails()
 
 Object? ModifyOrderDetails()
 {
-	List<Customer> CustomerList = ReadCustomers();
+	Dictionary<string, Customer> CustomerList = ReadCustomers();
 	ListCustomers();
 	Console.Write("Enter member ID: ");
 	try
 	{
-		int memberid = Convert.ToInt32(Console.ReadLine());
-		Customer? c = CustomerList.Find(x => x.Memberid == memberid);
-		if (c == null)
+		string memberid = Console.ReadLine()??"";
+		Customer? c;
+		if (!CustomerList.TryGetValue(memberid, out c))
 		{
 			Console.WriteLine("\nCustomer not found!");
 			return null;
@@ -234,12 +344,12 @@ Object? ModifyOrderDetails()
 				string ICtype = IC.Option; // get the type of ice cream
 
 				// Explicitly cast the ice cream object to its respective type
-				switch (ICtype)
-				{
-					case "Cone": IC = (Cone)IC; break;
-					case "Waffle": IC = (Waffles)IC; break;
-					case "Cup": IC = (Cup)IC; break;
-				}
+				// switch (ICtype)
+				// {
+				// 	case "Cone": IC = (Cone)IC; break;
+				// 	case "Waffle": IC = (Waffles)IC; break;
+				// 	case "Cup": IC = (Cup)IC; break;
+				// }
 
 				// Display the ice cream object
 				Console.WriteLine($"Selected ice cream: {IC}");
@@ -412,7 +522,7 @@ Object? ModifyOrderDetails()
 				}
 				break;
 			case "2": // Add a new ice cream
-				c.CurrentOrder.AddIceCream((IceCream?)CreateIceCreamMenu());
+				c.CurrentOrder.AddIceCream(CreateIceCreamMenu());
 				break;
 			case "3": // Delete an existing ice cream
 				Console.Write("Enter the index of the ice cream to delete: ");
@@ -441,11 +551,11 @@ Object? ModifyOrderDetails()
 }
 
 // Extra functions
-object? CreateIceCreamMenu()
+IceCream? CreateIceCreamMenu()
 {
 	//  Menu details
 	int MenuOption;
-	object NewIceCream;
+	IceCream NewIceCream;
 	//creating ice cream order:
 	Console.WriteLine($"===============================\nIce Cream Menu\n===============================\n[1] Cup\n[2] Cone\n[3] Waffle\n[0] Exit Program\n===============================\n");
 	Console.Write("Enter your option: ");
@@ -468,7 +578,6 @@ object? CreateIceCreamMenu()
 			Console.WriteLine("Thank you for using I.C. Treats!");
 			return null;
 		default:
-			return null;
 			throw new InvalidOptionException();
 	}
 
@@ -516,7 +625,7 @@ Cup CreateCup()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
-	Console.Write("Would you like to add toppings? (Y/N): ");
+	Console.Write("Would you like to add toppings? (y/n): ");
 	string ToppingChoice = Console.ReadLine()??"".ToLower();
 	if (ToppingChoice == "y")
 	{
@@ -535,12 +644,9 @@ Cup CreateCup()
 		case "4": ToppingType = "Oreos"; break;
 		default: throw new InvalidOptionException();
 	}
-		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+		t = new Topping(ToppingType);//  Topping object
 	}
-	else if (ToppingChoice == "n")
-	{
-		t = new Topping("None", 0);
-	}
+	else if (ToppingChoice == "n") {}
 	else
 	{
 		throw new InvalidOptionException();
@@ -595,7 +701,7 @@ Cone CreateCone()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
-		Console.Write("Would you like to add toppings? (Y/N): ");
+		Console.Write("Would you like to add toppings? (y/n): ");
 	string ToppingChoice = Console.ReadLine()??"".ToLower();
 	if (ToppingChoice == "y")
 	{
@@ -614,12 +720,9 @@ Cone CreateCone()
 		case "4": ToppingType = "Oreos"; break;
 		default: throw new InvalidOptionException();
 	}
-		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+		t = new Topping(ToppingType);//  Topping object
 	}
-	else if (ToppingChoice == "n")
-	{
-		t = new Topping("None", 0);
-	}
+	else if (ToppingChoice == "n") {}
 	else
 	{
 		throw new InvalidOptionException();
@@ -670,7 +773,7 @@ Waffles CreateWaffle()
 	Console.WriteLine($"===============================\nFlavour Menu\n===============================\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n===============================\n");
 	Console.Write("Enter Type of Ice Cream: ");
 	type = Console.ReadLine() ?? "";
-	Console.Write("Would you like premium flavours? (Y/N): ");
+	Console.Write("Would you like premium flavours? (y/n): ");
 	string choice = Console.ReadLine() ?? "".ToLower();
 	if (choice == "y")
 	{
@@ -708,12 +811,9 @@ Waffles CreateWaffle()
 		case "4": ToppingType = "Oreos"; break;
 		default: throw new InvalidOptionException();
 	}
-		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+		t = new Topping(ToppingType);//  Topping object
 	}
-	else if (ToppingChoice == "n")
-	{
-		t = new Topping("None", 0);
-	}
+	else if (ToppingChoice == "n") {}
 	else
 	{
 		throw new InvalidOptionException();

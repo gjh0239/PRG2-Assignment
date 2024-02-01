@@ -6,7 +6,7 @@
 
 namespace Assignment
 {
-	internal class IceCream
+	internal class IceCream: IIceCream
 	{
 		private string option;
 		private int scoops;
@@ -36,6 +36,11 @@ namespace Assignment
 		public virtual double CalculatePrice()
 		{
 			return 0.0; 	// place holder
+		}
+
+		public override string ToString()
+		{
+			return $"Option: {Option}, Scoops: {Scoops}, Flavours: [{string.Join(", ", Flavours)}], Toppings: [{string.Join(", ", Toppings)}]";
 		}
 	}
 
@@ -79,7 +84,7 @@ namespace Assignment
 			type = "";
 		}
 
-		public Topping(string type, int quantitiy)
+		public Topping(string type)
 		{
 			this.type = type;
 		}
@@ -90,7 +95,7 @@ namespace Assignment
 		}
 	}
 
-	internal class Cup : IceCream
+	internal class Cup : IceCream, IIceCream
 	{
 		public Cup() : base() { }
 
@@ -121,9 +126,14 @@ namespace Assignment
 
 			return price;
 		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+		}
 	}
 
-	internal class Waffles: IceCream
+	internal class Waffles: IceCream, IIceCream
     {
         private string waffleFlavour;
 		public string WaffleFlavour { get{ return waffleFlavour; } set{ waffleFlavour = value; } }
@@ -155,11 +165,11 @@ namespace Assignment
 		}
 		public override string ToString()
 		{
-			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {waffleFlavour}, ";
+			return $"{base.ToString()}, Waffle Flavour: {waffleFlavour}";
 		}
 	}
 
-	internal class Cone: IceCream
+	internal class Cone: IceCream, IIceCream
     {
         private bool dipped;
 		public bool Dipped { get{ return dipped; } set{ dipped = value; } }
@@ -185,7 +195,7 @@ namespace Assignment
 		}
 		public override string ToString()
 		{
-			return $"{Option}, {Scoops}, {Flavours}, {Toppings}, {Dipped}, ";
+			return $"{base.ToString()}, Dipped? {dipped}";
 		}
 	}
 	
@@ -349,19 +359,31 @@ namespace Assignment
 			return total;
 		}
 
-		public override string ToString() // TODO: FIX THIS
+		public override string ToString()
 		{
+			List<string> IceCreamStrings = new List<string>();
+			foreach (IceCream iceCream in IceCreamList)
+			{
+				IceCreamStrings.Add(iceCream.ToString()??"");  
+			}
 			if (TimeFulfilled == DateTime.MinValue)
 			{
-				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{"Not Fulfilled",-16}[{string.Join(", ", IceCreamList),	-0}]";
+				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{"Not Fulfilled",-16}[{string.Join(", ", IceCreamStrings), -0}]";
 			}
 			else
 			{
-				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{TimeFulfilled.ToString("dd/MM/yyyy"),-16}[{string.Join(", ", IceCreamList),-0}]";
+				return $"{Id,-12}{TimeReceived.ToString("dd'/'MM'/'yyyy"),-16}{TimeFulfilled.ToString("dd/MM/yyyy"),-16}[{string.Join(", ", IceCreamStrings),-0}]";
 			}
 		}
 	}
 
+	internal interface IIceCream
+	{
+		string Option { get; set; }
+		int Scoops { get; set; }
+		List<Flavour> Flavours { get; set; }
+		List<Topping> Toppings { get; set; }
+	}
 	internal class InvalidOptionException : Exception
 	{
 		public InvalidOptionException() : base() { }
