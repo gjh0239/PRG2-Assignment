@@ -518,12 +518,36 @@ Cup CreateCup()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
+	Console.Write("Would you like to add toppings? (Y/N): ");
+	string choice = Console.ReadLine()??"".ToLower();
+	if (choice == "y")
+	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
 	ToppingType = Console.ReadLine() ?? "";// Topping type
+
 	Console.Write("Enter quantity: ");
 	ToppingQuantity = int.Parse(Console.ReadLine() ?? "0");// Topping quantity
-	t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+
+	switch(ToppingType)
+	{
+		case "1": ToppingType = "Sprinkles"; break;
+		case "2": ToppingType = "Mochi"; break;
+		case "3": ToppingType = "Sago"; break;
+		case "4": ToppingType = "Oreos"; break;
+		default: throw new InvalidOptionException();
+	}
+		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+	}
+	else if (choice == "n")
+	{
+		t = new Topping("None", 0);
+	}
+	else
+	{
+		throw new InvalidOptionException();
+	}
+	
 
 	//  create cup object
 	x = new Cup(option, scoops, new List<Flavour>(), new List<Topping>());
@@ -573,12 +597,35 @@ Cone CreateCone()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
+	Console.Write("Would you like to add toppings? (Y/N): ");
+	string choice = Console.ReadLine()??"".ToLower();
+	if (choice == "y")
+	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
 	ToppingType = Console.ReadLine() ?? "";// Topping type
+
 	Console.Write("Enter quantity: ");
 	ToppingQuantity = int.Parse(Console.ReadLine() ?? "0");// Topping quantity
-	t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+
+	switch(ToppingType)
+	{
+		case "1": ToppingType = "Sprinkles"; break;
+		case "2": ToppingType = "Mochi"; break;
+		case "3": ToppingType = "Sago"; break;
+		case "4": ToppingType = "Oreos"; break;
+		default: throw new InvalidOptionException();
+	}
+		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+	}
+	else if (choice == "n")
+	{
+		t = new Topping("None", 0);
+	}
+	else
+	{
+		throw new InvalidOptionException();
+	}
 
 	//dipped?
 	Console.Write("Would you like your cone dipped? (Y/N): ");
@@ -620,6 +667,7 @@ Waffles CreateWaffle()
 
 	Console.Write("Enter number of scoops: ");
 	scoops = int.Parse(Console.ReadLine() ?? "0");
+
 	//flavour list
 	Console.WriteLine($"===============================\nFlavour Menu\n===============================\n[1] Vanilla\n[2] Chocolate\n[3] Strawberry\n===============================\n");
 	Console.Write("Enter Type of Ice Cream: ");
@@ -643,6 +691,10 @@ Waffles CreateWaffle()
 	f = new Flavour(type, premium, quantity);//  Flavour object
 
 	//topping list
+	Console.Write("Would you like to add toppings? (Y/N): ");
+	string choice = Console.ReadLine()??"".ToLower();
+	if (choice == "y")
+	{
 	Console.WriteLine($"===============================\nTopping Menu\n===============================\n[1] Sprinkles\n[2] Mochi\n[3] Sago\n[4] Oreos\n===============================\n");
 	Console.Write("Enter Type of Topping: ");
 	ToppingType = Console.ReadLine() ?? "";// Topping type
@@ -658,8 +710,18 @@ Waffles CreateWaffle()
 		case "4": ToppingType = "Oreos"; break;
 		default: throw new InvalidOptionException();
 	}
+		t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+	}
+	else if (choice == "n")
+	{
+		t = new Topping("None", 0);
+	}
+	else
+	{
+		throw new InvalidOptionException();
+	}
 
-	t = new Topping(ToppingType, ToppingQuantity);//  Topping object
+
 
 	//new waffle flavour
 	Console.WriteLine($"===============================\nWaffle Flavour Menu\n===============================\n[1] Red Velvet\n[2] Charcoal\n[3] Pandan\n===============================\n");
